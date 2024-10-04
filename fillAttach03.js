@@ -48,7 +48,6 @@ const detailsItem = {
     "Text1.26": "งื่อนไข",
 }
 
- */
 const detailsItem = {
     "Text2.27": "ำ�ดับที",
     "Text2.1": "เลขประจำ ตัวผู้เสียภาษีอากร (ของผู้มีเงินได้)",
@@ -75,6 +74,7 @@ const detailsItem = {
     "Text2.22": "ำ นวนเงินภาษีที่หักและนำ ส่งในครั้งน",
     "Text2.23": "งื่อนไข",
 }
+ */
 
 
 async function fillAttach03(headerFooterValues, attachValues) {
