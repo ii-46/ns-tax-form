@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node .",
     "wht53": "nodemon ./fillWHT53.js",
+    "wht03": "nodemon ./fillWHT03.js",
     "at53": "nodemon ./fillAttatch53.js"
   },
   "keywords": [],
