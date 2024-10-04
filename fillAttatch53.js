@@ -3,52 +3,64 @@ const fs = require('fs');
 const path = require('path');
 const fontkit = require('@pdf-lib/fontkit');
 
+
 /*
-{
-    "Text1.0": "เลขประจำ ตัวผู้เสียภาษีอากร",
+const headerFooterValues = {
+    // header
+    "Text1.0": "เลขประจำ ตัวผู้เสียภาษีอากร (ของผู้มีหน้าที่หักภาษี ณ ที่จ่าย)",
     "Text1.1": "สาขาที",
     "Text1.2": "ชแผ่นที่",
-    "Text1.3": "ี่อยู่ : อาคาร",
-    "Text1.4": "้องเลขที่.",
-    "Text1.5": "ชั้นที่",
-    "Text1.6": "หมู่บ้าน",
-    "Text1.7": "เลขท",
-    "Text1.8": "หมู่ที",
-    "Text1.9": "ตรอก/ซอย",
-    "Text1.10": "แยก",
-    "Text1.11": "ถนน",
-    "Text1.12": "ตำ บล/แขวง",
-    "Text1.13": "อำ เภอ/เขต",
-    "Text1.14": "ังหวัด",
-    "Text1.15": "รหัสไปรษณีย",
-    "Text1.16": "รหัสไปรษณีย",
-    "Text1.17": "หน้าชื่อเดือน) พ.ศ",
-    "Radio Button10": "เดือนที่จ่ายเงินได้พึงประเมิน 1 - 12",
-    "Radio Button0": "นำ ส่งภาษีตาม 1 - 3",
-    "Radio Button2": "ยื่นปกติ ยื่นเพิ่มเติมครั้งที 1 - 2",
-    "Radio Button3": "ใบแนบ หรือ สื่อบันทึก 1 - 2",
-    "Text1.19": "ใบแนบ จำ นวน ราย",
-    "Text1.20": "ใบแนบ จำ นวน แผ่น",
-    "Text1.21": "ใบแนบ จำ นวน ราย 2",
-    "Text1.22": "ใบแนบ จำ นวน แผ่น 2",
-    "Text1.23": "ทะเบียนรับเลขที",
-    "Text1.24": " เลขอ้างอิงการลงทะเบียน",
-    "Text2.1": "1.รวมยอดเงินได้ทั้งสิ้น .",
-    "Text2.2": "2.รวมยอดภาษีที่นำส่งทั้งสิ้น",
-    "Text2.3": "3. เงินเพิ่ม (ถ้ามี)",
-    "Text2.4": "รวมยอดภาษีที่นำส่งทั้งสิ้น และเงินเพิ่ม (2. + 3.)",
-    "Text2.23": "ลงชื่อ ผู้จ่ายเงิน",
-    "Text2.24": "ตำแหน่ง..",
-    "Text2.25": "ยื่นวันท",
-    "Text2.26": "เดือน",
-    "Text2.27": "พ.ศ.",
+    "Text1.3": "ในจำ นวน",
+
+    // footer
+    "Text6.28": "1", // รวมยอดเงินได้และภาษีที่นำ�ส่ง(นำ ไปรวมกับใบแนบ ภ.ง.ด.53 แผ่นอื่น (ถ้ามี)
+    "Text6.29": "2", // รวมยอดเงินได้และภาษีที่นำ�ส่ง(นำ ไปรวมกับใบแนบ ภ.ง.ด.53 แผ่นอื่น (ถ้ามี)
+    "Text9.1": "ลงชื่อ",
+    "Text9.2": "ตำ�แหน่ง",
+    "Text9.3": "ยื่นวันที่",
+    "Text9.4": "เดือน",
+    "Text9.5": "พ.ศ",
+}
+
+const detailsItem = {
+    "Text1.4": "ำ�ดับที",
+
+    // ชื่อและที่อยู่ของผู้มีเงินได้
+    "Text1.5": "เลขประจำ ตัวผู้เสียภาษีอากร (ของผู้มีเงินได้)",
+    "Text1.6": "ชื่อ",
+    "Text1.7": "ที่อยู",
+    "Text1.8": "ที่อยู 2",
+
+    "Text1.9": "สาขาที่",
+    // รายละเอียดเกี่ยวกับการจ่ายเงิน
+    // 1
+    "Text1.10": "ัน เดือน ปี ที่จ่าย",
+    "Text1.11": "ประเภทเงินได้พึงประเมินที่จ่าย",
+    "Text1.12": "อัตราภาษีร้อยละ",
+    "Text1.13": "จำ นวนเงินที่จ่ายในครั้งน",
+    "Text1.14": "ำ นวนเงินภาษีที่หักและนำ ส่งในครั้งน",
+    "Text1.15": "งื่อนไข",
+    // 2
+    "Text1.16": "ัน เดือน ปี ที่จ่าย",
+    "Text1.17": "ประเภทเงินได้พึงประเมินที่จ่าย",
+    "Text1.18": "อัตราภาษีร้อยละ",
+    "Text1.19": "จำ นวนเงินที่จ่ายในครั้งน",
+    "Text1.20": "ำ นวนเงินภาษีที่หักและนำ ส่งในครั้งน",
+    "Text1.21": "งื่อนไข",
+    // 2
+    "Text1.22": "ัน เดือน ปี ที่จ่าย",
+    "Text1.23": "ประเภทเงินได้พึงประเมินที่จ่าย",
+    "Text1.24": "อัตราภาษีร้อยละ",
+    "Text1.25": "จำ นวนเงินที่จ่ายในครั้งน",
+    "Text1.26": "ำ นวนเงินภาษีที่หักและนำ ส่งในครั้งน",
+    "Text1.27": "งื่อนไข",
 }
 */
 
 
-async function fillWHT53() {
-    console.log('fillWHT53');
-    const formBuf = fs.readFileSync('./forms/02.WHT53.pdf');
+async function fillAttach53(headerFooterValues, attachValues) {
+    console.log('-- fillAttach53 --');
+    const formBuf = fs.readFileSync('./forms/03.attach53.pdf');
     const pdfDoc = await PDFDocument.load(formBuf);
     pdfDoc.registerFontkit(fontkit);
     const THSarabunNew = fs.readFileSync(path.join(__dirname, 'assets', 'fonts', 'THSarabunNew.ttf'));
@@ -58,87 +70,183 @@ async function fillWHT53() {
     const form = pdfDoc.getForm();
     const fNormal = await pdfDoc.embedFont(THSarabunNew);
     const fBold = await pdfDoc.embedFont(THSarabunNewBold);
+
+
+    const details = {
+        "Text1.4": "2 12 1 212 12121 1",
+        "Text1.5": "1234567890123",
+        "Text1.6": "John Doe",
+        "Text1.7": "123 Main St",
+        "Text1.8": "Apt 4B",
+        "Text1.9": "00001",
+        "Text1.10": "01/01/2023",
+        "Text1.11": "Salary",
+        "Text1.12": "5%",
+        "Text1.13": "1000.00",
+        "Text1.14": "50.00",
+        "Text1.15": "1",
+        "Text1.16": "02/01/2023",
+        "Text1.17": "Bonus",
+        "Text1.18": "10%",
+        "Text1.19": "500.00",
+        "Text1.20": "50.00",
+        "Text1.21": "1",
+        "Text1.22": "03/01/2023",
+        "Text1.23": "Commission",
+        "Text1.24": "15%",
+        "Text1.25": "200.00",
+        "Text1.26": "30.00",
+        "Text1.27": "1",
+
+        // 2
+        "Text2.4": "2 12 1 212 12121 1",
+        "Text2.5": "1234567890123",
+        "Text2.6": "John Doe",
+        "Text2.7": "123 Main St",
+        "Text2.8": "Apt 4B",
+        "Text2.9": "00001",
+        "Text2.10": "01/01/2023",
+        "Text2.11": "Salary",
+        "Text2.12": "5%",
+        "Text2.13": "1000.00",
+        "Text2.14": "50.00",
+        "Text2.15": "1",
+        "Text2.16": "02/01/2023",
+        "Text2.17": "Bonus",
+        "Text2.18": "10%",
+        "Text2.19": "500.00",
+        "Text2.20": "50.00",
+        "Text2.21": "1",
+        "Text2.22": "03/01/2023",
+        "Text2.23": "Commission",
+        "Text2.24": "15%",
+        "Text2.25": "200.00",
+        "Text2.26": "30.00",
+        "Text2.27": "1",
+
+        // 3
+        "Text3.4": "2 12 1 212 12121 1",
+        "Text3.5": "1234567890123",
+        "Text3.6": "John Doe",
+        "Text3.7": "123 Main St",
+        "Text3.8": "Apt 4B",
+        "Text3.9": "00001",
+        "Text3.10": "01/01/2023",
+        "Text3.11": "Salary",
+        "Text3.12": "5%",
+        "Text3.13": "1000.00",
+        "Text3.14": "50.00",
+        "Text3.15": "1",
+        "Text3.16": "02/01/2023",
+        "Text3.17": "Bonus",
+        "Text3.18": "10%",
+        "Text3.19": "500.00",
+        "Text3.20": "50.00",
+        "Text3.21": "1",
+        "Text3.22": "03/01/2023",
+        "Text3.23": "Commission",
+        "Text3.24": "15%",
+        "Text3.25": "200.00",
+        "Text3.26": "30.00",
+        "Text3.27": "1",
+        // 4
+        "Text4.4": "2 12 1 212 12121 1",
+        "Text4.5": "1234567890123",
+        "Text4.6": "John Doe",
+        "Text4.7": "123 Main St",
+        "Text4.8": "Apt 4B",
+        "Text4.9": "00001",
+        "Text4.10": "01/01/2023",
+        "Text4.11": "Salary",
+        "Text4.12": "5%",
+        "Text4.13": "1000.00",
+        "Text4.14": "50.00",
+        "Text4.15": "1",
+        "Text4.16": "02/01/2023",
+        "Text4.17": "Bonus",
+        "Text4.18": "10%",
+        "Text4.19": "500.00",
+        "Text4.20": "50.00",
+        "Text4.21": "1",
+        "Text4.22": "03/01/2023",
+        "Text4.23": "Commission",
+        "Text4.24": "15%",
+        "Text4.25": "200.00",
+        "Text4.26": "30.00",
+        "Text4.27": "1",
+        // 5
+        "Text5.4": "2 12 1 212 12121 1",
+        "Text5.5": "1234567890123",
+        "Text5.6": "John Doe",
+        "Text5.7": "123 Main St",
+        "Text5.8": "Apt 4B",
+        "Text5.9": "00001",
+        "Text5.10": "01/01/2023",
+        "Text5.11": "Salary",
+        "Text5.12": "5%",
+        "Text5.13": "1000.00",
+        "Text5.14": "50.00",
+        "Text5.15": "1",
+        "Text5.16": "02/01/2023",
+        "Text5.17": "Bonus",
+        "Text5.18": "10%",
+        "Text5.19": "500.00",
+        "Text5.20": "50.00",
+        "Text5.21": "1",
+        "Text5.22": "03/01/2023",
+        "Text5.23": "Commission",
+        "Text5.24": "15%",
+        "Text5.25": "200.00",
+        "Text5.26": "30.00",
+        "Text5.27": "1",
+        // 3
+        "Text6.4": "2 12 1 212 12121 1",
+        "Text6.5": "1234567890123",
+        "Text6.6": "John Doe",
+        "Text6.7": "123 Main St",
+        "Text6.8": "Apt 4B",
+        "Text6.9": "00001",
+        "Text6.10": "01/01/2023",
+        "Text6.11": "Salary",
+        "Text6.12": "5%",
+        "Text6.13": "1000.00",
+        "Text6.14": "50.00",
+        "Text6.15": "1",
+        "Text6.16": "02/01/2023",
+        "Text6.17": "Bonus",
+        "Text6.18": "10%",
+        "Text6.19": "500.00",
+        "Text6.20": "50.00",
+        "Text6.21": "1",
+        "Text6.22": "03/01/2023",
+        "Text6.23": "Commission",
+        "Text6.24": "15%",
+        "Text6.25": "200.00",
+        "Text6.26": "30.00",
+        "Text6.27": "1",
+    };
+
     const fieldValues = {
+        // header
         "Text1.0": "0 6355 57000 22 9",
         "Text1.1": "00000",
-        "Text1.2": "บริษัท บุญรักษาบรรจุภัณฑ์ จำกัด",
-        "Text1.3": "MM Tower",
-        "Text1.4": "999/9",
-        "Text1.5": "9",
-        "Text1.6": "บุญรักษา",
-        "Text1.7": "999",
-        "Text1.8": "9",
-        "Text1.9": "9/2",
-        "Text1.10": "9",
-        "Text1.11": "ถนน",
-        "Text1.12": "แขวง บางรัก",
-        "Text1.13": "เขต บางรัก",
-        "Text1.14": "กรุงเทพมหานคร",
-        "Text1.15": "63110",
-        "Text1.16": "",
-        "Text1.17": "ก.ย",
-        "Radio Button10": "1",
-        "Radio Button0": "1",
-        "Radio Button2": "1",
-        "Radio Button3": "1",
-        "Text1.18": "5",
-        "Text1.19": "50",
-        "Text1.20": "4",
-        "Text1.21": "30",
-        "Text1.22": "3",
-        "Text1.23": "2",
-        "Text1.24": " 1232321",
-        "Text2.1": "2,320,323.00",
-        "Text2.2": "2,320,323.22",
-        "Text2.3": "2,320,323.45",
-        "Text2.4": "324,324.23",
-        "Text2.23": "ลงชื่อ ผู้จ่ายเงิน",
-        "Text2.24": "ตำแหน่ง..",
-        "Text2.25": "03",
-        "Text2.26": "07",
-        "Text2.27": "พ.ศ.",
+        "Text1.2": "10",
+        "Text1.3": "50",
+
+        // footer
+        "Text6.28": "7,823.213.21", // รวมยอดเงินได้และภาษีที่นำ�ส่ง(นำ ไปรวมกับใบแนบ ภ.ง.ด.53 แผ่นอื่น (ถ้ามี)
+        "Text6.29": "26,345,987.96", // รวมยอดเงินได้และภาษีที่นำ�ส่ง(นำ ไปรวมกับใบแนบ ภ.ง.ด.53 แผ่นอื่น (ถ้ามี)
+        "Text9.1": "ลงชื่อ",
+        "Text9.2": "ตำ�แหน่ง",
+        "Text9.3": "07",
+        "Text9.4": "10",
+        "Text9.5": "2567",
+        ...details
     }
 
     const fieldConfigs = {
-        "default": {font: fNormal, fontSize: 14},
+        "default": {font: fNormal, fontSize: 14, alignment: TextAlignment.Center},
         "Text1.0": {font: fNormal, fontSize: 14, alignment: TextAlignment.Center},
-        "Text1.1": {font: fNormal, fontSize: 14, alignment: TextAlignment.Center},
-        "Text1.2": {font: fNormal, fontSize: 14},
-        "Text1.3": {font: fNormal, fontSize: 14},
-        "Text1.4": {font: fNormal, fontSize: 14},
-        "Text1.5": {font: fNormal, fontSize: 14},
-        "Text1.6": {font: fNormal, fontSize: 14},
-        "Text1.7": {font: fNormal, fontSize: 14},
-        "Text1.8": {font: fNormal, fontSize: 14},
-        "Text1.9": {font: fNormal, fontSize: 14},
-        "Text1.10": {font: fNormal, fontSize: 14},
-        "Text1.11": {font: fNormal, fontSize: 14},
-        "Text1.12": {font: fNormal, fontSize: 14},
-        "Text1.13": {font: fNormal, fontSize: 14},
-        "Text1.14": {font: fNormal, fontSize: 14},
-        "Text1.15": {font: fNormal, fontSize: 14, alignment: TextAlignment.Center},
-        "Text1.16": {font: fNormal, fontSize: 14},
-        "Text1.17": {font: fNormal, fontSize: 14},
-        "Radio Button10": {font: fNormal, fontSize: 14},
-        "Radio Button0": {font: fNormal, fontSize: 14},
-        "Radio Button2": {font: fNormal, fontSize: 14},
-        "Radio Button3": {font: fNormal, fontSize: 14},
-        "Text1.18": {font: fNormal, fontSize: 14},
-        "Text1.19": {font: fNormal, fontSize: 14},
-        "Text1.20": {font: fNormal, fontSize: 14},
-        "Text1.21": {font: fNormal, fontSize: 14},
-        "Text1.22": {font: fNormal, fontSize: 14},
-        "Text1.23": {font: fNormal, fontSize: 14, alignment: TextAlignment.Right},
-        "Text1.24": {font: fNormal, fontSize: 14, alignment: TextAlignment.Right},
-        "Text2.1": {font: fNormal, fontSize: 14, alignment: TextAlignment.Right},
-        "Text2.2": {font: fNormal, fontSize: 14, alignment: TextAlignment.Right},
-        "Text2.3": {font: fNormal, fontSize: 14, alignment: TextAlignment.Right},
-        "Text2.4": {font: fNormal, fontSize: 14, alignment: TextAlignment.Right},
-        "Text2.23": {font: fNormal, fontSize: 14},
-        "Text2.24": {font: fNormal, fontSize: 14},
-        "Text2.25": {font: fNormal, fontSize: 14},
-        "Text2.26": {font: fNormal, fontSize: 14},
-        "Text2.27": {font: fNormal, fontSize: 14},
     };
     for (const [key, value] of Object.entries(fieldValues)) {
         const isRadio = key.startsWith('Radio Button');
@@ -162,17 +270,11 @@ async function fillWHT53() {
     if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir);
     }
-    const outputPath = path.join(outputDir, '02.WHT53.pdf');
+    const outputPath = path.join(outputDir, '03.attach53.pdf');
     form.flatten();
     const fillFormBuf = await pdfDoc.save();
     fs.writeFileSync(outputPath, fillFormBuf);
     console.log('PDF file written to', outputPath);
 }
 
-fillWHT53();
-
-function formatID(value) {
-    return (value && value.length <= 13)
-        ? `${value[0]} ${value.slice(1, 5)} ${value.slice(5, 10)} ${value.slice(10, 12)} ${value.slice(12)}`
-        : '';
-}
+fillAttach53();
