@@ -73,8 +73,8 @@ async function fillAttach53(headerFooterValues, attachValues) {
 
 
     const details = {
-        "Text1.4": "2 12 1 212 12121 1",
-        "Text1.5": "1234567890123",
+        "Text1.4": "1",
+        "Text1.5": "1  2 3  4  5 6 7  8 9 0 1 2  3",
         "Text1.6": "John Doe",
         "Text1.7": "123 Main St",
         "Text1.8": "Apt 4B",
@@ -99,8 +99,8 @@ async function fillAttach53(headerFooterValues, attachValues) {
         "Text1.27": "1",
 
         // 2
-        "Text2.4": "2 12 1 212 12121 1",
-        "Text2.5": "1234567890123",
+        "Text2.4": "2",
+        "Text2.5": "1  2 3  4  5 6 7  8 9 0 1 2  3",
         "Text2.6": "John Doe",
         "Text2.7": "123 Main St",
         "Text2.8": "Apt 4B",
@@ -125,8 +125,8 @@ async function fillAttach53(headerFooterValues, attachValues) {
         "Text2.27": "1",
 
         // 3
-        "Text3.4": "2 12 1 212 12121 1",
-        "Text3.5": "1234567890123",
+        "Text3.4": "3",
+        "Text3.5": "1  2 3  4  5 6 7  8 9 0 1 2  3",
         "Text3.6": "John Doe",
         "Text3.7": "123 Main St",
         "Text3.8": "Apt 4B",
@@ -150,8 +150,8 @@ async function fillAttach53(headerFooterValues, attachValues) {
         "Text3.26": "30.00",
         "Text3.27": "1",
         // 4
-        "Text4.4": "2 12 1 212 12121 1",
-        "Text4.5": "1234567890123",
+        "Text4.4": "4",
+        "Text4.5": "1  2 3  4  5 6 7  8 9 0 1 2  3",
         "Text4.6": "John Doe",
         "Text4.7": "123 Main St",
         "Text4.8": "Apt 4B",
@@ -175,8 +175,8 @@ async function fillAttach53(headerFooterValues, attachValues) {
         "Text4.26": "30.00",
         "Text4.27": "1",
         // 5
-        "Text5.4": "2 12 1 212 12121 1",
-        "Text5.5": "1234567890123",
+        "Text5.4": "5",
+        "Text5.5": "1  2 3  4  5 6 7  8 9 0 1 2  3",
         "Text5.6": "John Doe",
         "Text5.7": "123 Main St",
         "Text5.8": "Apt 4B",
@@ -199,9 +199,9 @@ async function fillAttach53(headerFooterValues, attachValues) {
         "Text5.25": "200.00",
         "Text5.26": "30.00",
         "Text5.27": "1",
-        // 3
-        "Text6.4": "2 12 1 212 12121 1",
-        "Text6.5": "1234567890123",
+        // 6
+        "Text6.4": "6",
+        "Text6.5": "1  2 3  4  5 6 7  8 9 0 1 2  3",
         "Text6.6": "John Doe",
         "Text6.7": "123 Main St",
         "Text6.8": "Apt 4B",
@@ -245,8 +245,9 @@ async function fillAttach53(headerFooterValues, attachValues) {
     }
 
     const fieldConfigs = {
-        "default": {font: fNormal, fontSize: 14, alignment: TextAlignment.Center},
+        "default": {font: fNormal, fontSize: 14},
         "Text1.0": {font: fNormal, fontSize: 14, alignment: TextAlignment.Center},
+        "Text1.1": {font: fNormal, fontSize: 14, alignment: TextAlignment.Center},
     };
     for (const [key, value] of Object.entries(fieldValues)) {
         const isRadio = key.startsWith('Radio Button');
@@ -262,7 +263,12 @@ async function fillAttach53(headerFooterValues, attachValues) {
             const field = form.getTextField(key);
             field.setText(value);
             if (config.fontSize) field.setFontSize(config.fontSize);
-            if (config.alignment) field.setAlignment(config.alignment);
+            if (config.alignment) {
+                field.setAlignment(config.alignment);
+            } /*else {
+                field.setAlignment(TextAlignment.Center);
+            }*/
+
             field.updateAppearances(config.font || fNormal);
         }
     }
