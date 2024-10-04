@@ -173,7 +173,7 @@ async function fillWHT53() {
     if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir);
     }
-    const outputPath = path.join(outputDir, '02.WHT53_filled.pdf');
+    const outputPath = path.join(outputDir, '02.WHT53.pdf');
     form.flatten();
     const fillFormBuf = await pdfDoc.save();
     fs.writeFileSync(outputPath, fillFormBuf);
