@@ -87,25 +87,25 @@ async function fillWHT53() {
         "Text1.15": "63110",
         "Text1.16": "",
         "Text1.17": "ก.ย",
-        "Radio Button10": "Yes",
-        "Radio Button0": "Yes",
-        "Radio Button2": "Yes",
-        "Radio Button3": "Yes",
+        "Radio Button10": "1",
+        "Radio Button0": "1",
+        "Radio Button2": "1",
+        "Radio Button3": "1",
         "Text1.18": "5",
-        "Text1.19": "ใบแนบ จำ นวน ราย",
-        "Text1.20": "ใบแนบ จำ นวน แผ่น",
-        "Text1.21": "ใบแนบ จำ นวน ราย 2",
-        "Text1.22": "ใบแนบ จำ นวน แผ่น 2",
-        "Text1.23": "ทะเบียนรับเลขที",
-        "Text1.24": " เลขอ้างอิงการลงทะเบียน",
-        "Text2.1": "2,320,323 . 00",
-        "Text2.2": "2,320,323 . 22",
-        "Text2.3": "2,320,323 . 45",
-        "Text2.4": "324,324 . 23",
+        "Text1.19": "50",
+        "Text1.20": "4",
+        "Text1.21": "30",
+        "Text1.22": "3",
+        "Text1.23": "2",
+        "Text1.24": " 1232321",
+        "Text2.1": "2,320,323.00",
+        "Text2.2": "2,320,323.22",
+        "Text2.3": "2,320,323.45",
+        "Text2.4": "324,324.23",
         "Text2.23": "ลงชื่อ ผู้จ่ายเงิน",
         "Text2.24": "ตำแหน่ง..",
         "Text2.25": "03",
-        "Text2.26": "เดือน",
+        "Text2.26": "07",
         "Text2.27": "พ.ศ.",
     }
 
@@ -174,7 +174,7 @@ async function fillWHT53() {
         fs.mkdirSync(outputDir);
     }
     const outputPath = path.join(outputDir, '02.WHT53_filled.pdf');
-    form.flatten();
+    // form.flatten();
     const fillFormBuf = await pdfDoc.save();
     fs.writeFileSync(outputPath, fillFormBuf);
     console.log('PDF file written to', outputPath);
