@@ -112,7 +112,7 @@ async function fillWHT53() {
     const fieldConfigs = {
         "default": {font: fNormal, fontSize: 12},
         "Text1.0": {font: fNormal, fontSize: 12, alignment: TextAlignment.Center},
-        "Text1.1": {font: fNormal, fontSize: 12},
+        "Text1.1": {font: fNormal, fontSize: 12, alignment: TextAlignment.Center},
         "Text1.2": {font: fNormal, fontSize: 12},
         "Text1.3": {font: fNormal, fontSize: 12},
         "Text1.4": {font: fNormal, fontSize: 12},
@@ -174,7 +174,7 @@ async function fillWHT53() {
         fs.mkdirSync(outputDir);
     }
     const outputPath = path.join(outputDir, '02.WHT53_filled.pdf');
-    // form.flatten();
+    form.flatten();
     const fillFormBuf = await pdfDoc.save();
     fs.writeFileSync(outputPath, fillFormBuf);
     console.log('PDF file written to', outputPath);
