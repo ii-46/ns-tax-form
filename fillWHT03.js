@@ -137,9 +137,9 @@ async function fillWHT03() {
         "Text2.4": {font: fNormal, fontSize: 14, alignment: TextAlignment.Right},
         "Text2.23": {font: fNormal, fontSize: 14},
         "Text2.24": {font: fNormal, fontSize: 14},
-        "Text2.25": {font: fNormal, fontSize: 14},
-        "Text2.26": {font: fNormal, fontSize: 14},
-        "Text2.27": {font: fNormal, fontSize: 14},
+        "Text2.25": {font: fNormal, fontSize: 14, alignment: TextAlignment.Center},
+        "Text2.26": {font: fNormal, fontSize: 14, alignment: TextAlignment.Center},
+        "Text2.27": {font: fNormal, fontSize: 14, alignment: TextAlignment.Center},
     };
     for (const [key, value] of Object.entries(fieldValues)) {
         const isRadio = key.startsWith('Radio Button');
