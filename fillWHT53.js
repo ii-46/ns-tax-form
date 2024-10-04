@@ -1,17 +1,7 @@
-import {
-    AppearanceMapping,
-    defaultTextFieldAppearanceProvider,
-    drawTextField,
-    PDFOperator,
-    PDFTextField, setFillingColor,
-    setFillingRgbColor
-} from "pdf-lib";
-
-const {PDFDocument, rgb, TextAlignment, StandardFonts} = require('pdf-lib');
+const {PDFDocument, TextAlignment} = require('pdf-lib');
 const fs = require('fs');
 const path = require('path');
 const fontkit = require('@pdf-lib/fontkit');
-const https = require('https');
 
 /*
 {
@@ -33,10 +23,10 @@ const https = require('https');
     "Text1.15": "รหัสไปรษณีย",
     "Text1.16": "รหัสไปรษณีย",
     "Text1.17": "หน้าชื่อเดือน) พ.ศ",
-    "Radio Button10": "เดือนที่จ่ายเงินได้พึงประเมิน (",
-    "Radio Button0": "นำ ส่งภาษีตาม 1 2 3",
-    "Radio Button2": "ยื่นปกติ ยื่นเพิ่มเติมครั้งที",
-    "Radio Button3": "ใบแนบ หรือ สื่อบันทึก",
+    "Radio Button10": "เดือนที่จ่ายเงินได้พึงประเมิน 1 - 12",
+    "Radio Button0": "นำ ส่งภาษีตาม 1 - 3",
+    "Radio Button2": "ยื่นปกติ ยื่นเพิ่มเติมครั้งที 1 - 2",
+    "Radio Button3": "ใบแนบ หรือ สื่อบันทึก 1 - 2",
     "Text1.19": "ใบแนบ จำ นวน ราย",
     "Text1.20": "ใบแนบ จำ นวน แผ่น",
     "Text1.21": "ใบแนบ จำ นวน ราย 2",
@@ -110,45 +100,45 @@ async function fillWHT53() {
     }
 
     const fieldConfigs = {
-        "default": {font: fNormal, fontSize: 12},
-        "Text1.0": {font: fNormal, fontSize: 12, alignment: TextAlignment.Center},
-        "Text1.1": {font: fNormal, fontSize: 12, alignment: TextAlignment.Center},
-        "Text1.2": {font: fNormal, fontSize: 12},
-        "Text1.3": {font: fNormal, fontSize: 12},
-        "Text1.4": {font: fNormal, fontSize: 12},
-        "Text1.5": {font: fNormal, fontSize: 12},
-        "Text1.6": {font: fNormal, fontSize: 12},
-        "Text1.7": {font: fNormal, fontSize: 12},
-        "Text1.8": {font: fNormal, fontSize: 12},
-        "Text1.9": {font: fNormal, fontSize: 12},
-        "Text1.10": {font: fNormal, fontSize: 12},
-        "Text1.11": {font: fNormal, fontSize: 12},
-        "Text1.12": {font: fNormal, fontSize: 12},
-        "Text1.13": {font: fNormal, fontSize: 12},
-        "Text1.14": {font: fNormal, fontSize: 12},
-        "Text1.15": {font: fNormal, fontSize: 12, alignment: TextAlignment.Center},
-        "Text1.16": {font: fNormal, fontSize: 12},
-        "Text1.17": {font: fNormal, fontSize: 12},
-        "Radio Button10": {font: fNormal, fontSize: 12},
-        "Radio Button0": {font: fNormal, fontSize: 12},
-        "Radio Button2": {font: fNormal, fontSize: 12},
-        "Radio Button3": {font: fNormal, fontSize: 12},
-        "Text1.18": {font: fNormal, fontSize: 12},
-        "Text1.19": {font: fNormal, fontSize: 12},
-        "Text1.20": {font: fNormal, fontSize: 12},
-        "Text1.21": {font: fNormal, fontSize: 12},
-        "Text1.22": {font: fNormal, fontSize: 12},
-        "Text1.23": {font: fNormal, fontSize: 12},
-        "Text1.24": {font: fNormal, fontSize: 12},
+        "default": {font: fNormal, fontSize: 14},
+        "Text1.0": {font: fNormal, fontSize: 14, alignment: TextAlignment.Center},
+        "Text1.1": {font: fNormal, fontSize: 14, alignment: TextAlignment.Center},
+        "Text1.2": {font: fNormal, fontSize: 14},
+        "Text1.3": {font: fNormal, fontSize: 14},
+        "Text1.4": {font: fNormal, fontSize: 14},
+        "Text1.5": {font: fNormal, fontSize: 14},
+        "Text1.6": {font: fNormal, fontSize: 14},
+        "Text1.7": {font: fNormal, fontSize: 14},
+        "Text1.8": {font: fNormal, fontSize: 14},
+        "Text1.9": {font: fNormal, fontSize: 14},
+        "Text1.10": {font: fNormal, fontSize: 14},
+        "Text1.11": {font: fNormal, fontSize: 14},
+        "Text1.12": {font: fNormal, fontSize: 14},
+        "Text1.13": {font: fNormal, fontSize: 14},
+        "Text1.14": {font: fNormal, fontSize: 14},
+        "Text1.15": {font: fNormal, fontSize: 14, alignment: TextAlignment.Center},
+        "Text1.16": {font: fNormal, fontSize: 14},
+        "Text1.17": {font: fNormal, fontSize: 14},
+        "Radio Button10": {font: fNormal, fontSize: 14},
+        "Radio Button0": {font: fNormal, fontSize: 14},
+        "Radio Button2": {font: fNormal, fontSize: 14},
+        "Radio Button3": {font: fNormal, fontSize: 14},
+        "Text1.18": {font: fNormal, fontSize: 14},
+        "Text1.19": {font: fNormal, fontSize: 14},
+        "Text1.20": {font: fNormal, fontSize: 14},
+        "Text1.21": {font: fNormal, fontSize: 14},
+        "Text1.22": {font: fNormal, fontSize: 14},
+        "Text1.23": {font: fNormal, fontSize: 14, alignment: TextAlignment.Right},
+        "Text1.24": {font: fNormal, fontSize: 14, alignment: TextAlignment.Right},
         "Text2.1": {font: fNormal, fontSize: 14, alignment: TextAlignment.Right},
         "Text2.2": {font: fNormal, fontSize: 14, alignment: TextAlignment.Right},
         "Text2.3": {font: fNormal, fontSize: 14, alignment: TextAlignment.Right},
         "Text2.4": {font: fNormal, fontSize: 14, alignment: TextAlignment.Right},
-        "Text2.23": {font: fNormal, fontSize: 12},
-        "Text2.24": {font: fNormal, fontSize: 12},
-        "Text2.25": {font: fNormal, fontSize: 12},
-        "Text2.26": {font: fNormal, fontSize: 12},
-        "Text2.27": {font: fNormal, fontSize: 12},
+        "Text2.23": {font: fNormal, fontSize: 14},
+        "Text2.24": {font: fNormal, fontSize: 14},
+        "Text2.25": {font: fNormal, fontSize: 14},
+        "Text2.26": {font: fNormal, fontSize: 14},
+        "Text2.27": {font: fNormal, fontSize: 14},
     };
     for (const [key, value] of Object.entries(fieldValues)) {
         const isRadio = key.startsWith('Radio Button');
@@ -157,12 +147,11 @@ async function fillWHT53() {
         console.log(key)
         if (isRadio) {
             const field = form.getRadioGroup(key);
-            // console.log(field.acroField.getExportValues())
-            // TODO: set export value in pdf form
+            console.log('Options:', field.getOptions());
             field.select(value);
         }
         if (isText) {
-            const field: PDFTextField = form.getTextField(key);
+            const field = form.getTextField(key);
             field.setText(value);
             if (config.fontSize) field.setFontSize(config.fontSize);
             if (config.alignment) field.setAlignment(config.alignment);

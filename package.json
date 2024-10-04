@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node .",
-    "dev": "nodemon ./fillWHT53.ts"
+    "wht53": "nodemon ./fillWHT53.js"
   },
   "keywords": [],
   "author": "",
