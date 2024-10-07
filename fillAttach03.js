@@ -248,8 +248,8 @@ async function fillAttach03(headerFooterValues, attachValues) {
         "Text1.3": "50",
 
         // footer
-        "Text6.24": "1,453,54",
-        "Text6.25": "54,665,46",
+        "Text6.24": "1,453.54",
+        "Text6.25": "54,665.46",
         "Text9.1": "ลงชื่อ",
         "Text9.2": "ตำแหน่ง",
         "Text9.3": "07",
