@@ -259,9 +259,9 @@ async function fillAttach03(headerFooterValues, attachValues) {
     }
 
     const fieldConfigs = {
-        "default": {font: fNormal, fontSize: 14},
-        "Text1.0": {font: fNormal, fontSize: 14, alignment: TextAlignment.Center},
-        "Text1.1": {font: fNormal, fontSize: 14, alignment: TextAlignment.Center},
+        "default": {font: fNormal, fontSize: 12},
+        "Text1.0": {font: fNormal, fontSize: 12, alignment: TextAlignment.Center},
+        "Text1.1": {font: fNormal, fontSize: 12, alignment: TextAlignment.Center},
     };
     for (const [key, value] of Object.entries(fieldValues)) {
         const isRadio = key.startsWith('Radio Button');
