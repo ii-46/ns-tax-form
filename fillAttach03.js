@@ -214,7 +214,13 @@ async function genDoc(data) {
     }
 
     const pdfBytes = await pdfDoc.save()
-    fs.writeFileSync(path.join(__dirname, 'output.pdf'), pdfBytes)
+
+    const outputDir = './output';
+    if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir);
+    }
+    const outputPath = path.join(outputDir, '05.attach03.pdf');
+    fs.writeFileSync(outputPath, pdfBytes);
 }
 
 const data = [{
