@@ -18,6 +18,9 @@ async function fillAttach03(header, footer, rows) {
     let sequence = getSequence(header.currentPage);
     console.log("sequence", sequence)
     const firstRows = rows.shift();
+    const addressFieldsConfigs = {
+        "Text1.8": {font: fNormal, fontSize: firstRows.payeeAddress.length > 80 ? 10 : 12},
+    };
     const details = [{
         "Text1.27": String(sequence++),
         "Text1.4": formatTaxPayerID(firstRows.payeeTaxId),
@@ -49,6 +52,7 @@ async function fillAttach03(header, footer, rows) {
     },
         ...rows.map((row, index) => {
             const idx = index + 2;
+            addressFieldsConfigs[`Text${idx}.5`] = {font: fNormal, fontSize: row.payeeAddress.length > 80 ? 10 : 12};
             return {
                 [`Text${idx}.27`]: String(sequence++),
                 [`Text${idx}.1`]: formatTaxPayerID(row.payeeTaxId),
@@ -105,6 +109,7 @@ async function fillAttach03(header, footer, rows) {
         "default": {font: fNormal, fontSize: 12},
         "Text1.0": {font: fNormal, fontSize: 12, alignment: TextAlignment.Center},
         "Text1.1": {font: fNormal, fontSize: 12, alignment: TextAlignment.Center},
+        ...addressFieldsConfigs
     };
     for (const [key, value] of Object.entries(fieldValues)) {
         const isRadio = key.startsWith('Radio Button');
@@ -366,7 +371,7 @@ const data = [{
     "internalDocument": "To Be Generated",
     "transactionId": "To Be Generated",
     "transactionType": "Update",
-    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต",
     "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
     "docWHTDate": "10/09/2024",
     "items": [
