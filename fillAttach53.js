@@ -34,7 +34,6 @@ async function fillAttach53(header, footer, rows) {
     const form = pdfDoc.getForm();
     const fNormal = await pdfDoc.embedFont(THSarabunNew);
     const fBold = await pdfDoc.embedFont(THSarabunNewBold);
-    // 2 page should start at 6, 3 page should start at 12 and so on
     let sequence = getSequence(header.currentPage);
     console.log("sequence", sequence)
 
@@ -125,12 +124,10 @@ async function fillAttach53(header, footer, rows) {
 
 
 function formatTaxPayerID(id) {
-    // 0105554567891 -> 0  1 0  5  5 5 4  5 6 7 8 9  1
     const characters = id.split('');
     return `${characters[0]}  ${characters[1]} ${characters[2]}  ${characters[3]} ${characters[4]} ${characters[5]}  ${characters[6]}  ${characters[7]} ${characters[8]} ${characters[9]} ${characters[10]} ${characters[11]}  ${characters[12]}`;
 }
 
-// 0105556154812 -> 0 1055 56154 81 2
 function formatTaxCollectorId(id) {
     const characters = id.split('');
     return `${characters[0]} ${characters[1]}${characters[2]}${characters[3]}${characters[4]} ${characters[5]}${characters[6]}${characters[7]}${characters[8]}${characters[9]} ${characters[10]}${characters[11]} ${characters[12]}`;
@@ -150,15 +147,9 @@ function parFloatString(str) {
 }
 
 function formatNumber(num) {
-    // Round to two decimal places
     const roundedNum = num.toFixed(2);
-    // Split the number into integer and decimal parts
     const [integerPart, decimalPart] = roundedNum.split('.');
-
-    // Format the integer part with commas
     const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
-    // Combine the formatted integer and the decimal part
     return `${formattedInteger}.${decimalPart}`;
 }
 

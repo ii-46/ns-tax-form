@@ -4,81 +4,7 @@ const path = require('path');
 const fontkit = require('@pdf-lib/fontkit');
 
 
-/*
-const headerFooterValues = {
-    // header
-    "Text1.0": "เลขประจำ ตัวผู้เสียภาษีอากร (ของผู้มีหน้าที่หักภาษี ณ ที่จ่าย)",
-    "Text1.1": "สาขาที",
-    "Text1.2": "แผ่นที่",
-    "Text1.3": "ในจำ นวน",
-
-    // footer
-    "Text6.24": "1", // รวมยอดเงินได้และภาษีที่นำ�ส่ง(นำ ไปรวมกับใบแนบ ภ.ง.ด.53 แผ่นอื่น (ถ้ามี)
-    "Text6.25": "2", // รวมยอดเงินได้และภาษีที่นำ�ส่ง(นำ ไปรวมกับใบแนบ ภ.ง.ด.53 แผ่นอื่น (ถ้ามี)
-    "Text9.1": "ลงชื่อ",
-    "Text9.2": "ตำ�แหน่ง",
-    "Text9.3": "ยื่นวันที่",
-    "Text9.4": "เดือน",
-    "Text9.5": "พ.ศ",
-}
-const detailsItem = {
-    "Text1.27": "ำ�ดับที",
-    "Text1.4": "เลขประจำ ตัวผู้เสียภาษีอากร (ของผู้มีเงินได้)",
-    "Text1.5": "ถ",
-    "Text1.6": "ชื่อ",
-    "Text1.7": "ชื่อสกุล",
-    "Text1.8": "ที่อยู 2",
-    "Text1.9": "ัน เดือน ปี ที่จ่าย",
-    "Text1.10": "ประเภทเงินได้",
-    "Text1.11": "อัตราภาษีร้อยละ",
-    "Text1.12": "จำ นวนเงินที่จ่ายในครั้งน",
-    "Text1.13": "ำ นวนเงินภาษีที่หักและนำ ส่งในครั้งน",
-    "Text1.14": "งื่อนไข",
-    "Text1.15": "ัน เดือน ปี ที่จ่าย",
-    "Text1.16": "ประเภทเงินได้พึงประเมินที่จ่าย",
-    "Text1.17": "อัตราภาษีร้อยละ",
-    "Text1.18": "จำ นวนเงินที่จ่ายในครั้งน",
-    "Text1.19": "ำ นวนเงินภาษีที่หักและนำ ส่งในครั้งน",
-    "Text1.20": "งื่อนไข",
-    "Text1.21": "ัน เดือน ปี ที่จ่าย",
-    "Text1.22": "ประเภทเงินได้พึงประเมินที่จ่าย",
-    "Text1.23": "อัตราภาษีร้อยละ",
-    "Text1.24": "จำ นวนเงินที่จ่ายในครั้งน",
-    "Text1.25": "ำ นวนเงินภาษีที่หักและนำ ส่งในครั้งน",
-    "Text1.26": "งื่อนไข",
-}
-
-const detailsItem = {
-    "Text2.27": "ำ�ดับที",
-    "Text2.1": "เลขประจำ ตัวผู้เสียภาษีอากร (ของผู้มีเงินได้)",
-    "Text2.2": "สาขาที่",
-    "Text2.3": "ชื่อ",
-    "Text2.4": "ชื่อสกุล",
-    "Text2.5": "ที่อยู 2",
-    "Text2.6": "ัน เดือน ปี ที่จ่าย",
-    "Text2.7": "ประเภทเงินได้",
-    "Text2.8": "อัตราภาษีร้อยละ",
-    "Text2.9": "จำ นวนเงินที่จ่ายในครั้งน",
-    "Text2.10": "ำ นวนเงินภาษีที่หักและนำ ส่งในครั้งน",
-    "Text2.11": "งื่อนไข",
-    "Text2.12": "ัน เดือน ปี ที่จ่าย",
-    "Text2.13": "ประเภทเงินได้พึงประเมินที่จ่าย",
-    "Text2.14": "อัตราภาษีร้อยละ",
-    "Text2.15": "จำ นวนเงินที่จ่ายในครั้งน",
-    "Text2.16": "ำ นวนเงินภาษีที่หักและนำ ส่งในครั้งน",
-    "Text2.17": "งื่อนไข",
-    "Text2.18": "ัน เดือน ปี ที่จ่าย",
-    "Text2.19": "ประเภทเงินได้พึงประเมินที่จ่าย",
-    "Text2.20": "อัตราภาษีร้อยละ",
-    "Text2.21": "จำ นวนเงินที่จ่ายในครั้งน",
-    "Text2.22": "ำ นวนเงินภาษีที่หักและนำ ส่งในครั้งน",
-    "Text2.23": "งื่อนไข",
-}
- */
-
-
-async function fillAttach03(headerFooterValues, attachValues) {
-    console.log('-- fillAttach03 --');
+async function fillAttach03(header, footer, rows) {
     const formBuf = fs.readFileSync('./forms/05.attach03.pdf');
     const pdfDoc = await PDFDocument.load(formBuf);
     pdfDoc.registerFontkit(fontkit);
@@ -89,172 +15,89 @@ async function fillAttach03(headerFooterValues, attachValues) {
     const form = pdfDoc.getForm();
     const fNormal = await pdfDoc.embedFont(THSarabunNew);
     const fBold = await pdfDoc.embedFont(THSarabunNewBold);
+    let sequence = getSequence(header.currentPage);
+    console.log("sequence", sequence)
+    const firstRows = rows.shift();
+    const details = [{
+        "Text1.27": String(sequence++),
+        "Text1.4": formatTaxPayerID(firstRows.payeeTaxId),
+        "Text1.5": String(firstRows.subsidiariesBranch),
+        "Text1.6": firstRows.payeeName.length === 2 ? firstRows.payeeName[0] : firstRows.payeeName,
+        "Text1.7": firstRows.payeeName.length === 2 ? firstRows.payeeName[1] : '',
+        "Text1.8": firstRows.payeeAddress,
 
+        "Text1.9": firstRows.items[0] ? formatDate(firstRows.docDate) : '',
+        "Text1.10": firstRows.items[0]?.taxWHDesc || "",
+        "Text1.11": firstRows.items[0] ? "3" : "", // TODO: change to อัตราภาษีร้อยละ
+        "Text1.12": firstRows.items[0]?.taxWHBaseAmount || "",
+        "Text1.13": firstRows.items[0]?.taxWHAmount || "",
+        "Text1.14": firstRows.items[0] ? firstRows.taxWHCondition : "",
 
-    const details = {
-        "Text1.27": "1",
-        "Text1.4": "1 2345 67890 12 3",
-        "Text1.5": "12345",
-        "Text1.6": "John Doe",
-        "Text1.7": "123 Main St",
-        "Text1.8": "Apt 4B",
-        "Text1.9": "01/01/2023",
-        "Text1.10": "Salary",
-        "Text1.11": "5%",
-        "Text1.12": "1000.00",
-        "Text1.13": "50.00",
-        "Text1.14": "1",
-        "Text1.15": "02/01/2023",
-        "Text1.16": "Bonus",
-        "Text1.17": "10%",
-        "Text1.18": "500.00",
-        "Text1.19": "50.00",
-        "Text1.20": "1",
-        "Text1.21": "03/01/2023",
-        "Text1.22": "Commission",
-        "Text1.23": "15%",
-        "Text1.24": "200.00",
-        "Text1.25": "30.00",
-        "Text1.26": "1",
+        "Text1.15": firstRows.items[1] ? formatDate(firstRows.docDate) : '',
+        "Text1.16": firstRows.items[1]?.taxWHDesc || "",
+        "Text1.17": firstRows.items[1] ? "3" : "", // TODO: change to อัตราภาษีร้อยละ
+        "Text1.18": firstRows.items[1]?.taxWHBaseAmount || "",
+        "Text1.19": firstRows.items[1]?.taxWHAmount || "",
+        "Text1.20": firstRows.items[1] ? firstRows.taxWHCondition : "",
 
-        // different pattern
-        "Text2.27": "1",
-        "Text2.1": "1 2345 67890 12 3",
-        "Text2.2": "12345",
-        "Text2.3": "John Doe",
-        "Text2.4": "123 Main St",
-        "Text2.5": "Apt 4B",
-        "Text2.6": "01/01/2023",
-        "Text2.7": "Salary",
-        "Text2.8": "5%",
-        "Text2.9": "1000.00",
-        "Text2.10": "50.00",
-        "Text2.11": "1",
-        "Text2.12": "02/01/2023",
-        "Text2.13": "Bonus",
-        "Text2.14": "10%",
-        "Text2.15": "500.00",
-        "Text2.16": "50.00",
-        "Text2.17": "1",
-        "Text2.18": "03/01/2023",
-        "Text2.19": "Commission",
-        "Text2.20": "15%",
-        "Text2.21": "200.00",
-        "Text2.22": "30.00",
-        "Text2.23": "1",
-        "Text3.27": "1",
-        "Text3.1": "1 2345 67890 12 3",
-        "Text3.2": "12345",
-        "Text3.3": "John Doe",
-        "Text3.4": "123 Main St",
-        "Text3.5": "Apt 4B",
-        "Text3.6": "01/01/2023",
-        "Text3.7": "Salary",
-        "Text3.8": "5%",
-        "Text3.9": "1000.00",
-        "Text3.10": "50.00",
-        "Text3.11": "1",
-        "Text3.12": "02/01/2023",
-        "Text3.13": "Bonus",
-        "Text3.14": "10%",
-        "Text3.15": "500.00",
-        "Text3.16": "50.00",
-        "Text3.17": "1",
-        "Text3.18": "03/01/2023",
-        "Text3.19": "Commission",
-        "Text3.20": "15%",
-        "Text3.21": "200.00",
-        "Text3.22": "30.00",
-        "Text3.23": "1",
-        "Text4.27": "1",
-        "Text4.1": "1 2345 67890 12 3",
-        "Text4.2": "12345",
-        "Text4.3": "John Doe",
-        "Text4.4": "123 Main St",
-        "Text4.5": "Apt 4B",
-        "Text4.6": "01/01/2023",
-        "Text4.7": "Salary",
-        "Text4.8": "5%",
-        "Text4.9": "1000.00",
-        "Text4.10": "50.00",
-        "Text4.11": "1",
-        "Text4.12": "02/01/2023",
-        "Text4.13": "Bonus",
-        "Text4.14": "10%",
-        "Text4.15": "500.00",
-        "Text4.16": "50.00",
-        "Text4.17": "1",
-        "Text4.18": "03/01/2023",
-        "Text4.19": "Commission",
-        "Text4.20": "15%",
-        "Text4.21": "200.00",
-        "Text4.22": "30.00",
-        "Text4.23": "1",
-        "Text5.27": "1",
-        "Text5.1": "1 2345 67890 12 3",
-        "Text5.2": "12345",
-        "Text5.3": "John Doe",
-        "Text5.4": "123 Main St",
-        "Text5.5": "Apt 4B",
-        "Text5.6": "01/01/2023",
-        "Text5.7": "Salary",
-        "Text5.8": "5%",
-        "Text5.9": "1000.00",
-        "Text5.10": "50.00",
-        "Text5.11": "1",
-        "Text5.12": "02/01/2023",
-        "Text5.13": "Bonus",
-        "Text5.14": "10%",
-        "Text5.15": "500.00",
-        "Text5.16": "50.00",
-        "Text5.17": "1",
-        "Text5.18": "03/01/2023",
-        "Text5.19": "Commission",
-        "Text5.20": "15%",
-        "Text5.21": "200.00",
-        "Text5.22": "30.00",
-        "Text5.23": "1",
-        "Text6.27": "1",
-        "Text6.1": "1 2345 67890 12 3",
-        "Text6.2": "12345",
-        "Text6.3": "John Doe",
-        "Text6.4": "123 Main St",
-        "Text6.5": "Apt 4B",
-        "Text6.6": "01/01/2023",
-        "Text6.7": "Salary",
-        "Text6.8": "5%",
-        "Text6.9": "1000.00",
-        "Text6.10": "50.00",
-        "Text6.11": "1",
-        "Text6.12": "02/01/2023",
-        "Text6.13": "Bonus",
-        "Text6.14": "10%",
-        "Text6.15": "500.00",
-        "Text6.16": "50.00",
-        "Text6.17": "1",
-        "Text6.18": "03/01/2023",
-        "Text6.19": "Commission",
-        "Text6.20": "15%",
-        "Text6.21": "200.00",
-        "Text6.22": "30.00",
-        "Text6.23": "1",
-    };
+        "Text1.21": firstRows.items[2] ? formatDate(firstRows.docDate) : '',
+        "Text1.22": firstRows.items[2]?.taxWHDesc || "",
+        "Text1.23": firstRows.items[2] ? "3" : "", // TODO: change to อัตราภาษีร้อยละ
+        "Text1.24": firstRows.items[2]?.taxWHBaseAmount || "",
+        "Text1.25": firstRows.items[2]?.taxWHAmount || "",
+        "Text1.26": firstRows.items[2] ? firstRows.taxWHCondition : "",
+    },
+        ...rows.map((row, index) => {
+            const idx = index + 2;
+            return {
+                [`Text${idx}.27`]: String(sequence++),
+                [`Text${idx}.1`]: formatTaxPayerID(row.payeeTaxId),
+                [`Text${idx}.2`]: String(row.subsidiariesBranch),
+                [`Text${idx}.3`]: row.payeeName.length === 2 ? row.payeeName[0] : row.payeeName,
+                [`Text${idx}.4`]: row.payeeName.length === 2 ? row.payeeName[1] : '',
+                [`Text${idx}.5`]: row.payeeAddress,
+
+                [`Text${idx}.6`]: row.items[0] ? formatDate(row.docDate) : '',
+                [`Text${idx}.7`]: row.items[0]?.taxWHDesc || "",
+                [`Text${idx}.8`]: row.items[0] ? "3" : "", // TODO: change to อัตราภาษีร้อยละ
+                [`Text${idx}.9`]: row.items[0]?.taxWHBaseAmount || "",
+                [`Text${idx}.10`]: row.items[0]?.taxWHAmount || "",
+                [`Text${idx}.11`]: row.items[0] ? row.taxWHCondition : "",
+
+                [`Text${idx}.12`]: row.items[1] ? formatDate(row.docDate) : '',
+                [`Text${idx}.13`]: row.items[1]?.taxWHDesc || "",
+                [`Text${idx}.14`]: row.items[1] ? "3" : "", // TODO: change to อัตราภาษีร้อยละ
+                [`Text${idx}.15`]: row.items[1]?.taxWHBaseAmount || "",
+                [`Text${idx}.16`]: row.items[1]?.taxWHAmount || "",
+                [`Text${idx}.17`]: row.items[1] ? row.taxWHCondition : "",
+
+                [`Text${idx}.18`]: row.items[2] ? formatDate(row.docDate) : '',
+                [`Text${idx}.19`]: row.items[2]?.taxWHDesc || "",
+                [`Text${idx}.20`]: row.items[2] ? "3" : "", // TODO: change to อัตราภาษีร้อยละ
+                [`Text${idx}.21`]: row.items[2]?.taxWHBaseAmount || "",
+                [`Text${idx}.22`]: row.items[2]?.taxWHAmount || "",
+                [`Text${idx}.23`]: row.items[2] ? row.taxWHCondition : "",
+            }
+        })
+    ].reduce((acc, curr) => {
+        return {...acc, ...curr}
+    });
 
     const fieldValues = {
         // header
-        "Text1.0": "0 6355 57000 22 9",
-        "Text1.1": "00000",
-        "Text1.2": "10",
-        "Text1.3": "50",
+        "Text1.0": formatTaxCollectorId(header.taxCollectorId),
+        "Text1.1": header.branchId,
+        "Text1.2": String(header.currentPage),
+        "Text1.3": String(header.totalPage),
 
         // footer
-        "Text6.24": "1,453.54",
-        "Text6.25": "54,665.46",
-        "Text9.1": "ลงชื่อ",
-        "Text9.2": "ตำแหน่ง",
-        "Text9.3": "07",
-        "Text9.4": "10",
-        "Text9.5": "2567",
+        "Text6.24": String(footer.totalBaseAmount),
+        "Text6.25": String(footer.totalTaxAmount),
+        "Text9.1": footer.signName,
+        "Text9.2": footer.signPosition,
+        "Text9.3": String(footer.signDate),
+        "Text9.4": String(footer.signMonth),
+        "Text9.5": String(footer.signYear),
         ...details
     }
 
@@ -290,11 +133,753 @@ async function fillAttach03(headerFooterValues, attachValues) {
     if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir);
     }
-    const outputPath = path.join(outputDir, '05.attach03.pdf');
     form.flatten();
-    const fillFormBuf = await pdfDoc.save();
-    fs.writeFileSync(outputPath, fillFormBuf);
-    console.log('PDF file written to', outputPath);
+    return await pdfDoc.save();
 }
 
-fillAttach03();
+function formatTaxPayerID(id) {
+    // 1 2345 67890 12 3
+    const characters = id.split('');
+    return `${characters[0]} ${characters[1]}${characters[2]}${characters[3]}${characters[4]} ${characters[5]}${characters[6]}${characters[7]}${characters[8]}${characters[9]} ${characters[10]}${characters[11]} ${characters[12]}`;
+}
+
+function formatTaxCollectorId(id) {
+    const characters = id.split('');
+    return `${characters[0]} ${characters[1]}${characters[2]}${characters[3]}${characters[4]} ${characters[5]}${characters[6]}${characters[7]}${characters[8]}${characters[9]} ${characters[10]}${characters[11]} ${characters[12]}`;
+}
+
+function formatDate(date) {
+    const d = new Date(date._seconds * 1000);
+    return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+}
+
+function getSequence(n) {
+    return 1 + (n - 1) * 6;
+}
+
+function parFloatString(str) {
+    return Number(str.replace(/,/g, ''));
+}
+
+function formatNumber(num) {
+    const roundedNum = num.toFixed(2);
+    const [integerPart, decimalPart] = roundedNum.split('.');
+    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return `${formattedInteger}.${decimalPart}`;
+}
+
+async function genDoc(data) {
+    const header = {
+        taxCollectorId: data[0].companyInfoTaxID,
+        branchId: data[0].subsidiariesBranch,
+    }
+    const signDate = data[0].docWHTDate.split('/')[0]
+    const signMonth = data[0].docWHTDate.split('/')[1]
+    const signYear = data[0].docWHTDate.split('/')[2]
+    const footer = {
+        totalBaseAmount: formatNumber(data.reduce((acc, item) => acc + parFloatString(item.taxWHSumBaseAmount), 0)),
+        totalTaxAmount: formatNumber(data.reduce((acc, item) => acc + parFloatString(item.taxWHSumAmount), 0)),
+        signName: data[0]?.signName || '',
+        signPosition: data[0]?.signPosition || '',
+        signDate,
+        signMonth,
+        signYear
+    }
+
+    const dataChunk = []
+    let i, j, temporary, chunk = 6
+    for (i = 0, j = data.length; i < j; i += chunk) {
+        temporary = data.slice(i, i + chunk)
+        dataChunk.push(temporary)
+    }
+
+    const docBuffer = []
+    for (let i = 0; i < dataChunk.length; i++) {
+        docBuffer.push(await fillAttach03({
+                ...header,
+                currentPage: i + 1,
+                totalPage: dataChunk.length,
+            },
+            footer,
+            dataChunk[i]))
+    }
+
+    const pdfDoc = await PDFDocument.create()
+    for (let i = 0; i < docBuffer.length; i++) {
+        const pdfDocTemp = await PDFDocument.load(docBuffer[i])
+        const copiedPages = await pdfDoc.copyPages(pdfDocTemp, pdfDocTemp.getPageIndices())
+        copiedPages.forEach((page) => {
+            pdfDoc.addPage(page)
+        })
+    }
+
+    const pdfBytes = await pdfDoc.save()
+    fs.writeFileSync(path.join(__dirname, 'output.pdf'), pdfBytes)
+}
+
+const data = [{
+    "payeeTaxId": "0105554567891",
+    "taxWHCode": "1",
+    "link": "https://8621541-SB1.app.netsuite.com/app/accounting/transactions/vendpymt.nl?id=5833&whence=",
+    "taxWHSumAmountText": "หนึ่งร้อยห้าสิบบาทถ้วน",
+    "paymentType": "B",
+    "payeeName": "Ari Consulting Co.,Ltd",
+    "taxWHSumBaseAmount": "5,000.00",
+    "subsidiariesBranch": "00000",
+    "taxWHCondition": "1",
+    "documentID": "00000-0320430001",
+    "timeCreated": {
+        "_seconds": 1727692183,
+        "_nanoseconds": 426000000
+    },
+    "companyAddressTST": null,
+    "@PdfDefaultPath": "gs://sld-etax.appspot.com/NsPDF/approve_wh3_081156.pdf",
+    "docDate": {
+        "_seconds": 1725926400,
+        "_nanoseconds": 0
+    },
+    "companyInfoTaxID": "0105556154812",
+    "taxWHSumAmount": "5,000.00",
+    "internalDocument": "To Be Generated",
+    "transactionId": "To Be Generated",
+    "transactionType": "Update",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
+    "docWHTDate": "10/09/2024",
+    "items": [
+        {
+            "taxWHDesc": "ค่าบริการ",
+            "taxWHDocDate": "10/09/2024",
+            "taxWHAmount": "150.00",
+            "taxWHBaseAmount": "5,000.00"
+        }
+    ],
+    "@PdfUrl": "https://firebasestorage.googleapis.com/v0/b/sld-etax.appspot.com/o/Companies%2FqCp8p3s5hafVuAOBmutT%2FThaiSmartTaxPdfs%2F00000-0320430001.pdf?alt=media&token=8549a722-f4dc-40a8-a034-dcb6e657a555",
+    "companyInfoName": "Sala Daeng Co.,Ltd."
+}, {
+    "payeeTaxId": "0105554567891",
+    "taxWHCode": "1",
+    "link": "https://8621541-SB1.app.netsuite.com/app/accounting/transactions/vendpymt.nl?id=5833&whence=",
+    "taxWHSumAmountText": "หนึ่งร้อยห้าสิบบาทถ้วน",
+    "paymentType": "B",
+    "payeeName": "Ari Consulting Co.,Ltd",
+    "taxWHSumBaseAmount": "5,000.00",
+    "subsidiariesBranch": "00000",
+    "taxWHCondition": "1",
+    "documentID": "00000-0320430001",
+    "timeCreated": {
+        "_seconds": 1727692183,
+        "_nanoseconds": 426000000
+    },
+    "companyAddressTST": null,
+    "@PdfDefaultPath": "gs://sld-etax.appspot.com/NsPDF/approve_wh3_081156.pdf",
+    "docDate": {
+        "_seconds": 1725926400,
+        "_nanoseconds": 0
+    },
+    "companyInfoTaxID": "0105556154812",
+    "taxWHSumAmount": "5,000.00",
+    "internalDocument": "To Be Generated",
+    "transactionId": "To Be Generated",
+    "transactionType": "Update",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
+    "docWHTDate": "10/09/2024",
+    "items": [
+        {
+            "taxWHDesc": "ค่าบริการ",
+            "taxWHDocDate": "10/09/2024",
+            "taxWHAmount": "150.00",
+            "taxWHBaseAmount": "5,000.00"
+        }
+    ],
+    "@PdfUrl": "https://firebasestorage.googleapis.com/v0/b/sld-etax.appspot.com/o/Companies%2FqCp8p3s5hafVuAOBmutT%2FThaiSmartTaxPdfs%2F00000-0320430001.pdf?alt=media&token=8549a722-f4dc-40a8-a034-dcb6e657a555",
+    "companyInfoName": "Sala Daeng Co.,Ltd."
+}, {
+    "payeeTaxId": "0105554567891",
+    "taxWHCode": "1",
+    "link": "https://8621541-SB1.app.netsuite.com/app/accounting/transactions/vendpymt.nl?id=5833&whence=",
+    "taxWHSumAmountText": "หนึ่งร้อยห้าสิบบาทถ้วน",
+    "paymentType": "B",
+    "payeeName": "Ari Consulting Co.,Ltd",
+    "taxWHSumBaseAmount": "5,000.00",
+    "subsidiariesBranch": "00000",
+    "taxWHCondition": "1",
+    "documentID": "00000-0320430001",
+    "timeCreated": {
+        "_seconds": 1727692183,
+        "_nanoseconds": 426000000
+    },
+    "companyAddressTST": null,
+    "@PdfDefaultPath": "gs://sld-etax.appspot.com/NsPDF/approve_wh3_081156.pdf",
+    "docDate": {
+        "_seconds": 1725926400,
+        "_nanoseconds": 0
+    },
+    "companyInfoTaxID": "0105556154812",
+    "taxWHSumAmount": "5,000.00",
+    "internalDocument": "To Be Generated",
+    "transactionId": "To Be Generated",
+    "transactionType": "Update",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
+    "docWHTDate": "10/09/2024",
+    "items": [
+        {
+            "taxWHDesc": "ค่าบริการ",
+            "taxWHDocDate": "10/09/2024",
+            "taxWHAmount": "150.00",
+            "taxWHBaseAmount": "5,000.00"
+        }
+    ],
+    "@PdfUrl": "https://firebasestorage.googleapis.com/v0/b/sld-etax.appspot.com/o/Companies%2FqCp8p3s5hafVuAOBmutT%2FThaiSmartTaxPdfs%2F00000-0320430001.pdf?alt=media&token=8549a722-f4dc-40a8-a034-dcb6e657a555",
+    "companyInfoName": "Sala Daeng Co.,Ltd."
+}, {
+    "payeeTaxId": "0105554567891",
+    "taxWHCode": "1",
+    "link": "https://8621541-SB1.app.netsuite.com/app/accounting/transactions/vendpymt.nl?id=5833&whence=",
+    "taxWHSumAmountText": "หนึ่งร้อยห้าสิบบาทถ้วน",
+    "paymentType": "B",
+    "payeeName": "Ari Consulting Co.,Ltd",
+    "taxWHSumBaseAmount": "5,000.00",
+    "subsidiariesBranch": "00000",
+    "taxWHCondition": "1",
+    "documentID": "00000-0320430001",
+    "timeCreated": {
+        "_seconds": 1727692183,
+        "_nanoseconds": 426000000
+    },
+    "companyAddressTST": null,
+    "@PdfDefaultPath": "gs://sld-etax.appspot.com/NsPDF/approve_wh3_081156.pdf",
+    "docDate": {
+        "_seconds": 1725926400,
+        "_nanoseconds": 0
+    },
+    "companyInfoTaxID": "0105556154812",
+    "taxWHSumAmount": "5,000.30",
+    "internalDocument": "To Be Generated",
+    "transactionId": "To Be Generated",
+    "transactionType": "Update",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
+    "docWHTDate": "10/09/2024",
+    "items": [
+        {
+            "taxWHDesc": "ค่าบริการ",
+            "taxWHDocDate": "10/09/2024",
+            "taxWHAmount": "150.00",
+            "taxWHBaseAmount": "5,000.00"
+        }
+    ],
+    "@PdfUrl": "https://firebasestorage.googleapis.com/v0/b/sld-etax.appspot.com/o/Companies%2FqCp8p3s5hafVuAOBmutT%2FThaiSmartTaxPdfs%2F00000-0320430001.pdf?alt=media&token=8549a722-f4dc-40a8-a034-dcb6e657a555",
+    "companyInfoName": "Sala Daeng Co.,Ltd."
+}, {
+    "payeeTaxId": "0105554567891",
+    "taxWHCode": "1",
+    "link": "https://8621541-SB1.app.netsuite.com/app/accounting/transactions/vendpymt.nl?id=5833&whence=",
+    "taxWHSumAmountText": "หนึ่งร้อยห้าสิบบาทถ้วน",
+    "paymentType": "B",
+    "payeeName": "Ari Consulting Co.,Ltd",
+    "taxWHSumBaseAmount": "5,000.00",
+    "subsidiariesBranch": "00000",
+    "taxWHCondition": "1",
+    "documentID": "00000-0320430001",
+    "timeCreated": {
+        "_seconds": 1727692183,
+        "_nanoseconds": 426000000
+    },
+    "companyAddressTST": null,
+    "@PdfDefaultPath": "gs://sld-etax.appspot.com/NsPDF/approve_wh3_081156.pdf",
+    "docDate": {
+        "_seconds": 1725926400,
+        "_nanoseconds": 0
+    },
+    "companyInfoTaxID": "0105556154812",
+    "taxWHSumAmount": "5,000.00",
+    "internalDocument": "To Be Generated",
+    "transactionId": "To Be Generated",
+    "transactionType": "Update",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
+    "docWHTDate": "10/09/2024",
+    "items": [
+        {
+            "taxWHDesc": "ค่าบริการ",
+            "taxWHDocDate": "10/09/2024",
+            "taxWHAmount": "150.00",
+            "taxWHBaseAmount": "5,000.00"
+        }
+    ],
+    "@PdfUrl": "https://firebasestorage.googleapis.com/v0/b/sld-etax.appspot.com/o/Companies%2FqCp8p3s5hafVuAOBmutT%2FThaiSmartTaxPdfs%2F00000-0320430001.pdf?alt=media&token=8549a722-f4dc-40a8-a034-dcb6e657a555",
+    "companyInfoName": "Sala Daeng Co.,Ltd."
+}, {
+    "payeeTaxId": "0105554567891",
+    "taxWHCode": "1",
+    "link": "https://8621541-SB1.app.netsuite.com/app/accounting/transactions/vendpymt.nl?id=5833&whence=",
+    "taxWHSumAmountText": "หนึ่งร้อยห้าสิบบาทถ้วน",
+    "paymentType": "B",
+    "payeeName": "Ari Consulting Co.,Ltd",
+    "taxWHSumBaseAmount": "5,000.00",
+    "subsidiariesBranch": "00000",
+    "taxWHCondition": "1",
+    "documentID": "00000-0320430001",
+    "timeCreated": {
+        "_seconds": 1727692183,
+        "_nanoseconds": 426000000
+    },
+    "companyAddressTST": null,
+    "@PdfDefaultPath": "gs://sld-etax.appspot.com/NsPDF/approve_wh3_081156.pdf",
+    "docDate": {
+        "_seconds": 1725926400,
+        "_nanoseconds": 0
+    },
+    "companyInfoTaxID": "0105556154812",
+    "taxWHSumAmount": "5,000.00",
+    "internalDocument": "To Be Generated",
+    "transactionId": "To Be Generated",
+    "transactionType": "Update",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
+    "docWHTDate": "10/09/2024",
+    "items": [
+        {
+            "taxWHDesc": "ค่าบริการ",
+            "taxWHDocDate": "10/09/2024",
+            "taxWHAmount": "150.00",
+            "taxWHBaseAmount": "5,000.00"
+        }
+    ],
+    "@PdfUrl": "https://firebasestorage.googleapis.com/v0/b/sld-etax.appspot.com/o/Companies%2FqCp8p3s5hafVuAOBmutT%2FThaiSmartTaxPdfs%2F00000-0320430001.pdf?alt=media&token=8549a722-f4dc-40a8-a034-dcb6e657a555",
+    "companyInfoName": "Sala Daeng Co.,Ltd."
+}, {
+    "payeeTaxId": "0105554567891",
+    "taxWHCode": "1",
+    "link": "https://8621541-SB1.app.netsuite.com/app/accounting/transactions/vendpymt.nl?id=5833&whence=",
+    "taxWHSumAmountText": "หนึ่งร้อยห้าสิบบาทถ้วน",
+    "paymentType": "B",
+    "payeeName": "Ari Consulting Co.,Ltd",
+    "taxWHSumBaseAmount": "5,000.00",
+    "subsidiariesBranch": "00000",
+    "taxWHCondition": "1",
+    "documentID": "00000-0320430001",
+    "timeCreated": {
+        "_seconds": 1727692183,
+        "_nanoseconds": 426000000
+    },
+    "companyAddressTST": null,
+    "@PdfDefaultPath": "gs://sld-etax.appspot.com/NsPDF/approve_wh3_081156.pdf",
+    "docDate": {
+        "_seconds": 1725926400,
+        "_nanoseconds": 0
+    },
+    "companyInfoTaxID": "0105556154812",
+    "taxWHSumAmount": "5,000.00",
+    "internalDocument": "To Be Generated",
+    "transactionId": "To Be Generated",
+    "transactionType": "Update",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
+    "docWHTDate": "10/09/2024",
+    "items": [
+        {
+            "taxWHDesc": "ค่าบริการ",
+            "taxWHDocDate": "10/09/2024",
+            "taxWHAmount": "150.00",
+            "taxWHBaseAmount": "5,000.00"
+        }
+    ],
+    "@PdfUrl": "https://firebasestorage.googleapis.com/v0/b/sld-etax.appspot.com/o/Companies%2FqCp8p3s5hafVuAOBmutT%2FThaiSmartTaxPdfs%2F00000-0320430001.pdf?alt=media&token=8549a722-f4dc-40a8-a034-dcb6e657a555",
+    "companyInfoName": "Sala Daeng Co.,Ltd."
+}, {
+    "payeeTaxId": "0105554567891",
+    "taxWHCode": "1",
+    "link": "https://8621541-SB1.app.netsuite.com/app/accounting/transactions/vendpymt.nl?id=5833&whence=",
+    "taxWHSumAmountText": "หนึ่งร้อยห้าสิบบาทถ้วน",
+    "paymentType": "B",
+    "payeeName": "Ari Consulting Co.,Ltd",
+    "taxWHSumBaseAmount": "5,000.00",
+    "subsidiariesBranch": "00000",
+    "taxWHCondition": "1",
+    "documentID": "00000-0320430001",
+    "timeCreated": {
+        "_seconds": 1727692183,
+        "_nanoseconds": 426000000
+    },
+    "companyAddressTST": null,
+    "@PdfDefaultPath": "gs://sld-etax.appspot.com/NsPDF/approve_wh3_081156.pdf",
+    "docDate": {
+        "_seconds": 1725926400,
+        "_nanoseconds": 0
+    },
+    "companyInfoTaxID": "0105556154812",
+    "taxWHSumAmount": "5,000.00",
+    "internalDocument": "To Be Generated",
+    "transactionId": "To Be Generated",
+    "transactionType": "Update",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
+    "docWHTDate": "10/09/2024",
+    "items": [
+        {
+            "taxWHDesc": "ค่าบริการ",
+            "taxWHDocDate": "10/09/2024",
+            "taxWHAmount": "150.00",
+            "taxWHBaseAmount": "5,000.00"
+        }
+    ],
+    "@PdfUrl": "https://firebasestorage.googleapis.com/v0/b/sld-etax.appspot.com/o/Companies%2FqCp8p3s5hafVuAOBmutT%2FThaiSmartTaxPdfs%2F00000-0320430001.pdf?alt=media&token=8549a722-f4dc-40a8-a034-dcb6e657a555",
+    "companyInfoName": "Sala Daeng Co.,Ltd."
+}, {
+    "payeeTaxId": "0105554567891",
+    "taxWHCode": "1",
+    "link": "https://8621541-SB1.app.netsuite.com/app/accounting/transactions/vendpymt.nl?id=5833&whence=",
+    "taxWHSumAmountText": "หนึ่งร้อยห้าสิบบาทถ้วน",
+    "paymentType": "B",
+    "payeeName": "Ari Consulting Co.,Ltd",
+    "taxWHSumBaseAmount": "5,000.00",
+    "subsidiariesBranch": "00000",
+    "taxWHCondition": "1",
+    "documentID": "00000-0320430001",
+    "timeCreated": {
+        "_seconds": 1727692183,
+        "_nanoseconds": 426000000
+    },
+    "companyAddressTST": null,
+    "@PdfDefaultPath": "gs://sld-etax.appspot.com/NsPDF/approve_wh3_081156.pdf",
+    "docDate": {
+        "_seconds": 1725926400,
+        "_nanoseconds": 0
+    },
+    "companyInfoTaxID": "0105556154812",
+    "taxWHSumAmount": "5,000.00",
+    "internalDocument": "To Be Generated",
+    "transactionId": "To Be Generated",
+    "transactionType": "Update",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
+    "docWHTDate": "10/09/2024",
+    "items": [
+        {
+            "taxWHDesc": "ค่าบริการ",
+            "taxWHDocDate": "10/09/2024",
+            "taxWHAmount": "150.00",
+            "taxWHBaseAmount": "5,000.00"
+        }
+    ],
+    "@PdfUrl": "https://firebasestorage.googleapis.com/v0/b/sld-etax.appspot.com/o/Companies%2FqCp8p3s5hafVuAOBmutT%2FThaiSmartTaxPdfs%2F00000-0320430001.pdf?alt=media&token=8549a722-f4dc-40a8-a034-dcb6e657a555",
+    "companyInfoName": "Sala Daeng Co.,Ltd."
+}, {
+    "payeeTaxId": "0105554567891",
+    "taxWHCode": "1",
+    "link": "https://8621541-SB1.app.netsuite.com/app/accounting/transactions/vendpymt.nl?id=5833&whence=",
+    "taxWHSumAmountText": "หนึ่งร้อยห้าสิบบาทถ้วน",
+    "paymentType": "B",
+    "payeeName": "Ari Consulting Co.,Ltd",
+    "taxWHSumBaseAmount": "5,000.00",
+    "subsidiariesBranch": "00000",
+    "taxWHCondition": "1",
+    "documentID": "00000-0320430001",
+    "timeCreated": {
+        "_seconds": 1727692183,
+        "_nanoseconds": 426000000
+    },
+    "companyAddressTST": null,
+    "@PdfDefaultPath": "gs://sld-etax.appspot.com/NsPDF/approve_wh3_081156.pdf",
+    "docDate": {
+        "_seconds": 1725926400,
+        "_nanoseconds": 0
+    },
+    "companyInfoTaxID": "0105556154812",
+    "taxWHSumAmount": "5,000.00",
+    "internalDocument": "To Be Generated",
+    "transactionId": "To Be Generated",
+    "transactionType": "Update",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
+    "docWHTDate": "10/09/2024",
+    "items": [
+        {
+            "taxWHDesc": "ค่าบริการ",
+            "taxWHDocDate": "10/09/2024",
+            "taxWHAmount": "150.00",
+            "taxWHBaseAmount": "5,000.00"
+        }
+    ],
+    "@PdfUrl": "https://firebasestorage.googleapis.com/v0/b/sld-etax.appspot.com/o/Companies%2FqCp8p3s5hafVuAOBmutT%2FThaiSmartTaxPdfs%2F00000-0320430001.pdf?alt=media&token=8549a722-f4dc-40a8-a034-dcb6e657a555",
+    "companyInfoName": "Sala Daeng Co.,Ltd."
+}, {
+    "payeeTaxId": "0105554567891",
+    "taxWHCode": "1",
+    "link": "https://8621541-SB1.app.netsuite.com/app/accounting/transactions/vendpymt.nl?id=5833&whence=",
+    "taxWHSumAmountText": "หนึ่งร้อยห้าสิบบาทถ้วน",
+    "paymentType": "B",
+    "payeeName": "Ari Consulting Co.,Ltd",
+    "taxWHSumBaseAmount": "5,000.00",
+    "subsidiariesBranch": "00000",
+    "taxWHCondition": "1",
+    "documentID": "00000-0320430001",
+    "timeCreated": {
+        "_seconds": 1727692183,
+        "_nanoseconds": 426000000
+    },
+    "companyAddressTST": null,
+    "@PdfDefaultPath": "gs://sld-etax.appspot.com/NsPDF/approve_wh3_081156.pdf",
+    "docDate": {
+        "_seconds": 1725926400,
+        "_nanoseconds": 0
+    },
+    "companyInfoTaxID": "0105556154812",
+    "taxWHSumAmount": "5,000.00",
+    "internalDocument": "To Be Generated",
+    "transactionId": "To Be Generated",
+    "transactionType": "Update",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
+    "docWHTDate": "10/09/2024",
+    "items": [
+        {
+            "taxWHDesc": "ค่าบริการ",
+            "taxWHDocDate": "10/09/2024",
+            "taxWHAmount": "150.00",
+            "taxWHBaseAmount": "5,000.00"
+        }
+    ],
+    "@PdfUrl": "https://firebasestorage.googleapis.com/v0/b/sld-etax.appspot.com/o/Companies%2FqCp8p3s5hafVuAOBmutT%2FThaiSmartTaxPdfs%2F00000-0320430001.pdf?alt=media&token=8549a722-f4dc-40a8-a034-dcb6e657a555",
+    "companyInfoName": "Sala Daeng Co.,Ltd."
+}, {
+    "payeeTaxId": "0105554567891",
+    "taxWHCode": "1",
+    "link": "https://8621541-SB1.app.netsuite.com/app/accounting/transactions/vendpymt.nl?id=5833&whence=",
+    "taxWHSumAmountText": "หนึ่งร้อยห้าสิบบาทถ้วน",
+    "paymentType": "B",
+    "payeeName": "Ari Consulting Co.,Ltd",
+    "taxWHSumBaseAmount": "5,000.00",
+    "subsidiariesBranch": "00000",
+    "taxWHCondition": "1",
+    "documentID": "00000-0320430001",
+    "timeCreated": {
+        "_seconds": 1727692183,
+        "_nanoseconds": 426000000
+    },
+    "companyAddressTST": null,
+    "@PdfDefaultPath": "gs://sld-etax.appspot.com/NsPDF/approve_wh3_081156.pdf",
+    "docDate": {
+        "_seconds": 1725926400,
+        "_nanoseconds": 0
+    },
+    "companyInfoTaxID": "0105556154812",
+    "taxWHSumAmount": "5,000.00",
+    "internalDocument": "To Be Generated",
+    "transactionId": "To Be Generated",
+    "transactionType": "Update",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
+    "docWHTDate": "10/09/2024",
+    "items": [
+        {
+            "taxWHDesc": "ค่าบริการ",
+            "taxWHDocDate": "10/09/2024",
+            "taxWHAmount": "150.00",
+            "taxWHBaseAmount": "5,000.00"
+        }
+    ],
+    "@PdfUrl": "https://firebasestorage.googleapis.com/v0/b/sld-etax.appspot.com/o/Companies%2FqCp8p3s5hafVuAOBmutT%2FThaiSmartTaxPdfs%2F00000-0320430001.pdf?alt=media&token=8549a722-f4dc-40a8-a034-dcb6e657a555",
+    "companyInfoName": "Sala Daeng Co.,Ltd."
+}, {
+    "payeeTaxId": "0105554567891",
+    "taxWHCode": "1",
+    "link": "https://8621541-SB1.app.netsuite.com/app/accounting/transactions/vendpymt.nl?id=5833&whence=",
+    "taxWHSumAmountText": "หนึ่งร้อยห้าสิบบาทถ้วน",
+    "paymentType": "B",
+    "payeeName": "Ari Consulting Co.,Ltd",
+    "taxWHSumBaseAmount": "5,000.00",
+    "subsidiariesBranch": "00000",
+    "taxWHCondition": "1",
+    "documentID": "00000-0320430001",
+    "timeCreated": {
+        "_seconds": 1727692183,
+        "_nanoseconds": 426000000
+    },
+    "companyAddressTST": null,
+    "@PdfDefaultPath": "gs://sld-etax.appspot.com/NsPDF/approve_wh3_081156.pdf",
+    "docDate": {
+        "_seconds": 1725926400,
+        "_nanoseconds": 0
+    },
+    "companyInfoTaxID": "0105556154812",
+    "taxWHSumAmount": "5,000.00",
+    "internalDocument": "To Be Generated",
+    "transactionId": "To Be Generated",
+    "transactionType": "Update",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
+    "docWHTDate": "10/09/2024",
+    "items": [
+        {
+            "taxWHDesc": "ค่าบริการ",
+            "taxWHDocDate": "10/09/2024",
+            "taxWHAmount": "150.00",
+            "taxWHBaseAmount": "5,000.00"
+        }
+    ],
+    "@PdfUrl": "https://firebasestorage.googleapis.com/v0/b/sld-etax.appspot.com/o/Companies%2FqCp8p3s5hafVuAOBmutT%2FThaiSmartTaxPdfs%2F00000-0320430001.pdf?alt=media&token=8549a722-f4dc-40a8-a034-dcb6e657a555",
+    "companyInfoName": "Sala Daeng Co.,Ltd."
+}, {
+    "payeeTaxId": "0105554567891",
+    "taxWHCode": "1",
+    "link": "https://8621541-SB1.app.netsuite.com/app/accounting/transactions/vendpymt.nl?id=5833&whence=",
+    "taxWHSumAmountText": "หนึ่งร้อยห้าสิบบาทถ้วน",
+    "paymentType": "B",
+    "payeeName": "Ari Consulting Co.,Ltd",
+    "taxWHSumBaseAmount": "5,000.00",
+    "subsidiariesBranch": "00000",
+    "taxWHCondition": "1",
+    "documentID": "00000-0320430001",
+    "timeCreated": {
+        "_seconds": 1727692183,
+        "_nanoseconds": 426000000
+    },
+    "companyAddressTST": null,
+    "@PdfDefaultPath": "gs://sld-etax.appspot.com/NsPDF/approve_wh3_081156.pdf",
+    "docDate": {
+        "_seconds": 1725926400,
+        "_nanoseconds": 0
+    },
+    "companyInfoTaxID": "0105556154812",
+    "taxWHSumAmount": "5,000.00",
+    "internalDocument": "To Be Generated",
+    "transactionId": "To Be Generated",
+    "transactionType": "Update",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
+    "docWHTDate": "10/09/2024",
+    "items": [
+        {
+            "taxWHDesc": "ค่าบริการ",
+            "taxWHDocDate": "10/09/2024",
+            "taxWHAmount": "150.00",
+            "taxWHBaseAmount": "5,000.00"
+        }
+    ],
+    "@PdfUrl": "https://firebasestorage.googleapis.com/v0/b/sld-etax.appspot.com/o/Companies%2FqCp8p3s5hafVuAOBmutT%2FThaiSmartTaxPdfs%2F00000-0320430001.pdf?alt=media&token=8549a722-f4dc-40a8-a034-dcb6e657a555",
+    "companyInfoName": "Sala Daeng Co.,Ltd."
+}, {
+    "payeeTaxId": "0105554567891",
+    "taxWHCode": "1",
+    "link": "https://8621541-SB1.app.netsuite.com/app/accounting/transactions/vendpymt.nl?id=5833&whence=",
+    "taxWHSumAmountText": "หนึ่งร้อยห้าสิบบาทถ้วน",
+    "paymentType": "B",
+    "payeeName": "Ari Consulting Co.,Ltd",
+    "taxWHSumBaseAmount": "5,000.00",
+    "subsidiariesBranch": "00000",
+    "taxWHCondition": "1",
+    "documentID": "00000-0320430001",
+    "timeCreated": {
+        "_seconds": 1727692183,
+        "_nanoseconds": 426000000
+    },
+    "companyAddressTST": null,
+    "@PdfDefaultPath": "gs://sld-etax.appspot.com/NsPDF/approve_wh3_081156.pdf",
+    "docDate": {
+        "_seconds": 1725926400,
+        "_nanoseconds": 0
+    },
+    "companyInfoTaxID": "0105556154812",
+    "taxWHSumAmount": "5,000.00",
+    "internalDocument": "To Be Generated",
+    "transactionId": "To Be Generated",
+    "transactionType": "Update",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
+    "docWHTDate": "10/09/2024",
+    "items": [
+        {
+            "taxWHDesc": "ค่าบริการ",
+            "taxWHDocDate": "10/09/2024",
+            "taxWHAmount": "150.00",
+            "taxWHBaseAmount": "5,000.00"
+        }
+    ],
+    "@PdfUrl": "https://firebasestorage.googleapis.com/v0/b/sld-etax.appspot.com/o/Companies%2FqCp8p3s5hafVuAOBmutT%2FThaiSmartTaxPdfs%2F00000-0320430001.pdf?alt=media&token=8549a722-f4dc-40a8-a034-dcb6e657a555",
+    "companyInfoName": "Sala Daeng Co.,Ltd."
+}, {
+    "payeeTaxId": "0105554567891",
+    "taxWHCode": "1",
+    "link": "https://8621541-SB1.app.netsuite.com/app/accounting/transactions/vendpymt.nl?id=5833&whence=",
+    "taxWHSumAmountText": "หนึ่งร้อยห้าสิบบาทถ้วน",
+    "paymentType": "B",
+    "payeeName": "Ari Consulting Co.,Ltd",
+    "taxWHSumBaseAmount": "5,000.00",
+    "subsidiariesBranch": "00000",
+    "taxWHCondition": "1",
+    "documentID": "00000-0320430001",
+    "timeCreated": {
+        "_seconds": 1727692183,
+        "_nanoseconds": 426000000
+    },
+    "companyAddressTST": null,
+    "@PdfDefaultPath": "gs://sld-etax.appspot.com/NsPDF/approve_wh3_081156.pdf",
+    "docDate": {
+        "_seconds": 1725926400,
+        "_nanoseconds": 0
+    },
+    "companyInfoTaxID": "0105556154812",
+    "taxWHSumAmount": "5,000.00",
+    "internalDocument": "To Be Generated",
+    "transactionId": "To Be Generated",
+    "transactionType": "Update",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
+    "docWHTDate": "10/09/2024",
+    "items": [
+        {
+            "taxWHDesc": "ค่าบริการ",
+            "taxWHDocDate": "10/09/2024",
+            "taxWHAmount": "150.00",
+            "taxWHBaseAmount": "5,000.00"
+        }
+    ],
+    "@PdfUrl": "https://firebasestorage.googleapis.com/v0/b/sld-etax.appspot.com/o/Companies%2FqCp8p3s5hafVuAOBmutT%2FThaiSmartTaxPdfs%2F00000-0320430001.pdf?alt=media&token=8549a722-f4dc-40a8-a034-dcb6e657a555",
+    "companyInfoName": "Sala Daeng Co.,Ltd."
+}, {
+    "payeeTaxId": "0105554567891",
+    "taxWHCode": "1",
+    "link": "https://8621541-SB1.app.netsuite.com/app/accounting/transactions/vendpymt.nl?id=5833&whence=",
+    "taxWHSumAmountText": "หนึ่งร้อยห้าสิบบาทถ้วน",
+    "paymentType": "B",
+    "payeeName": "Ari Consulting Co.,Ltd",
+    "taxWHSumBaseAmount": "5,000.00",
+    "subsidiariesBranch": "00000",
+    "taxWHCondition": "1",
+    "documentID": "00000-0320430001",
+    "timeCreated": {
+        "_seconds": 1727692183,
+        "_nanoseconds": 426000000
+    },
+    "companyAddressTST": null,
+    "@PdfDefaultPath": "gs://sld-etax.appspot.com/NsPDF/approve_wh3_081156.pdf",
+    "docDate": {
+        "_seconds": 1725926400,
+        "_nanoseconds": 0
+    },
+    "companyInfoTaxID": "0105556154812",
+    "taxWHSumAmount": "5,000.00",
+    "internalDocument": "To Be Generated",
+    "transactionId": "To Be Generated",
+    "transactionType": "Update",
+    "payeeAddress": "เลขที่ 598 ชั้น 6 อาคารคิวเฮาส์เพลินจิต ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330",
+    "@PdfPath": "gs://sld-etax.appspot.com/Companies/qCp8p3s5hafVuAOBmutT/ThaiSmartTaxPdfs/00000-0320430001.pdf",
+    "docWHTDate": "10/09/2024",
+    "items": [
+        {
+            "taxWHDesc": "ค่าบริการ",
+            "taxWHDocDate": "10/09/2024",
+            "taxWHAmount": "150.00",
+            "taxWHBaseAmount": "5,000.00"
+        }
+    ],
+    "@PdfUrl": "https://firebasestorage.googleapis.com/v0/b/sld-etax.appspot.com/o/Companies%2FqCp8p3s5hafVuAOBmutT%2FThaiSmartTaxPdfs%2F00000-0320430001.pdf?alt=media&token=8549a722-f4dc-40a8-a034-dcb6e657a555",
+    "companyInfoName": "Sala Daeng Co.,Ltd."
+}]
+
+genDoc(data)
