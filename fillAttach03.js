@@ -25,8 +25,7 @@ async function fillAttach03(header, footer, rows) {
         "Text1.27": String(sequence++),
         "Text1.4": formatTaxPayerID(firstRows.payeeTaxId),
         "Text1.5": String(firstRows.subsidiariesBranch),
-        "Text1.6": firstRows.payeeName.length === 2 ? firstRows.payeeName[0] : firstRows.payeeName,
-        "Text1.7": firstRows.payeeName.length === 2 ? firstRows.payeeName[1] : '',
+        "Text1.6": firstRows.payeeName,
         "Text1.8": firstRows.payeeAddress,
 
         "Text1.9": firstRows.items[0] ? formatDate(firstRows.docDate) : '',
@@ -57,8 +56,7 @@ async function fillAttach03(header, footer, rows) {
                 [`Text${idx}.27`]: String(sequence++),
                 [`Text${idx}.1`]: formatTaxPayerID(row.payeeTaxId),
                 [`Text${idx}.2`]: String(row.subsidiariesBranch),
-                [`Text${idx}.3`]: row.payeeName.length === 2 ? row.payeeName[0] : row.payeeName,
-                [`Text${idx}.4`]: row.payeeName.length === 2 ? row.payeeName[1] : '',
+                [`Text${idx}.3`]: row.payeeName,
                 [`Text${idx}.5`]: row.payeeAddress,
 
                 [`Text${idx}.6`]: row.items[0] ? formatDate(row.docDate) : '',
